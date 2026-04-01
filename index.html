@@ -377,6 +377,13 @@
       return formatLocalDate(date);
     }
 
+    function getHoraAtual() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      return `${h}:${m}`;
+    }
+
     async function confirmar(horario) {
       const nome = getNome();
       const device_id = getDeviceId();
@@ -386,7 +393,7 @@
         return;
       }
 
-      await supabaseClient.from('presencas').upsert({
+      await supabaseClient.from('presencas').insert({
         nome,
         device_id,
         horario,
@@ -419,10 +426,11 @@
         return;
       }
 
-      await supabaseClient.from('presencas').upsert({
+      await supabaseClient.from('presencas').insert({
         nome,
         device_id,
         status: 'aqui',
+        horario: getHoraAtual(),
         data: getDiaOperacional(),
         updated_at: new Date().toISOString()
       });
