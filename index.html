@@ -491,16 +491,60 @@
     }
 
     function renderizar(dados) {
-      const agora = dados.filter(p => p.status === 'aqui');
+      const agoraTime = new Date();
+      const agoraKeys = new Set();
+      const agoraList = [];
+      const agendados = [];
+
+      function getKey(p) {
+        return `${p.device_id}::${p.nome}`;
+      }
+
+      dados.forEach(p => {
+        if (p.status === 'aqui') {
+          agoraKeys.add(getKey(p));
+        }
+      });
+
+      dados.forEach(p => {
+        const key = getKey(p);
+
+        if (p.status === 'aqui') {
+          if (!agoraKeys.has(key)) return;
+          if (!agoraList.find(x => x.key === key)) {
+            agoraList.push({ key, nome: p.nome });
+          }
+          return;
+        }
+
+        if (p.status === 'vou') {
+          if (agoraKeys.has(key)) {
+            return;
+          }
+
+          if (!p.horario) {
+            return;
+          }
+
+          const horarioDate = getHorarioDate(p.horario);
+          if (horarioDate <= agoraTime) {
+            if (!agoraList.find(x => x.key === key)) {
+              agoraList.push({ key, nome: p.nome });
+            }
+          } else {
+            agendados.push(p);
+          }
+        }
+      });
 
       document.getElementById('agora').innerHTML =
-        `👥 ${agora.length} jogando agora<br/>
-         ${agora.map(p => p.nome).join(', ')}`;
+        `👥 ${agoraList.length} jogando agora<br/>
+         ${agoraList.map(p => p.nome).join(', ')}`;
 
       let html = '';
 
       horarios.forEach(h => {
-        const pessoas = dados.filter(p => p.horario === h);
+        const pessoas = agendados.filter(p => p.horario === h);
 
         if (pessoas.length > 0) {
           html += `<div>
