@@ -253,7 +253,7 @@
       <img class="logo" src="logo/logo.jpg" alt="Praça David Rosemblit Beach Tennis">
       <div>
         <h1>Beach Tennis</h1>
-        <p>Confirme sua presença e organize o jogo com rapidez.</p>
+        <p>Confirme sua presença e veja quem está jogando.</p>
       </div>
     </header>
 
@@ -323,12 +323,16 @@
     window.onload = () => {
       const select = document.getElementById('horarioSelect');
       const nomeSalvo = localStorage.getItem('nome');
+      const agora = new Date();
 
       if (nomeSalvo) {
         document.getElementById('nome').value = nomeSalvo;
       }
 
       horarios.forEach(h => {
+        if (getHorarioDate(h) < agora) {
+          return;
+        }
         const option = document.createElement('option');
         option.value = h;
         option.textContent = `Vou ${h}`;
@@ -377,6 +381,18 @@
       return formatLocalDate(date);
     }
 
+    function getHorarioDate(horario) {
+      const [h, m] = horario.split(':').map(Number);
+      const [y, mo, d] = getDiaOperacional().split('-').map(Number);
+      const date = new Date(y, mo - 1, d, h, m, 0, 0);
+
+      if (h < DIA_TROCA_HORA) {
+        date.setDate(date.getDate() + 1);
+      }
+
+      return date;
+    }
+
     function getHoraAtual() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
@@ -390,6 +406,13 @@
 
       if (!nome) {
         alert('Digite seu nome');
+        return;
+      }
+
+      const horarioDate = getHorarioDate(horario);
+      const agora = new Date();
+      if (horarioDate < agora) {
+        alert('Não é possível marcar um horário no passado.');
         return;
       }
 
