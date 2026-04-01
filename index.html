@@ -346,12 +346,16 @@
     }
 
     function getNome() {
-      let nome = localStorage.getItem('nome');
-      if (!nome) {
-        nome = document.getElementById('nome').value;
-        localStorage.setItem('nome', nome);
+      const input = document.getElementById('nome');
+      const digitado = input.value.trim();
+      const salvo = localStorage.getItem('nome') || '';
+
+      if (digitado) {
+        localStorage.setItem('nome', digitado);
+        return digitado;
       }
-      return nome;
+
+      return salvo;
     }
 
     const TTL_MS = 3 * 60 * 60 * 1000;
