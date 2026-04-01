@@ -307,12 +307,13 @@
     // 🔹 gera horários de 30 em 30 min
     function gerarHorarios() {
       const horarios = [];
-      for (let h = 6; h <= 22; h++) {
+      for (let h = 6; h <= 23; h++) {
         horarios.push(`${String(h).padStart(2, '0')}:00`);
-        if (h !== 22) {
+        if (h !== 23) {
           horarios.push(`${String(h).padStart(2, '0')}:30`);
         }
       }
+      horarios.push('00:00');
       return horarios;
     }
 
