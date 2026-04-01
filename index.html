@@ -393,7 +393,7 @@
         return;
       }
 
-      await supabaseClient.from('presencas').insert({
+      const { error } = await supabaseClient.from('presencas').insert({
         nome,
         device_id,
         horario,
@@ -401,6 +401,12 @@
         data: getDiaOperacional(),
         updated_at: new Date().toISOString()
       });
+
+      if (error) {
+        console.error('Erro ao inserir (vou):', error);
+        alert('Não foi possível salvar. Veja o erro no console.');
+        return;
+      }
 
       carregarDados();
     }
@@ -426,7 +432,7 @@
         return;
       }
 
-      await supabaseClient.from('presencas').insert({
+      const { error } = await supabaseClient.from('presencas').insert({
         nome,
         device_id,
         status: 'aqui',
@@ -434,6 +440,12 @@
         data: getDiaOperacional(),
         updated_at: new Date().toISOString()
       });
+
+      if (error) {
+        console.error('Erro ao inserir (aqui):', error);
+        alert('Não foi possível salvar. Veja o erro no console.');
+        return;
+      }
 
       carregarDados();
     }
