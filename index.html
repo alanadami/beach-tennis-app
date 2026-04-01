@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beach Tennis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark: #1a2a0a;
+      --green-deep: #253a10;
+      --green-mid: #3f5b1f;
+      --lime: #b7dd2c;
+      --lime-strong: #c9f02a;
+      --white: #f5f7f2;
+      --card: rgba(20, 30, 10, 0.7);
+      --border: rgba(183, 221, 44, 0.3);
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(201, 240, 42, 0.15), transparent 60%),
+        radial-gradient(800px 500px at 90% 10%, rgba(183, 221, 44, 0.12), transparent 55%),
+        linear-gradient(160deg, var(--green-dark), var(--green-deep) 45%, #132006 100%);
+      min-height: 100vh;
+      padding: 24px 14px 40px;
+      padding: calc(24px + env(safe-area-inset-top))
+        calc(14px + env(safe-area-inset-right))
+        calc(40px + env(safe-area-inset-bottom))
+        calc(14px + env(safe-area-inset-left));
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      background: linear-gradient(120deg, rgba(26, 42, 10, 0.9), rgba(26, 42, 10, 0.5));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -80px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 240, 42, 0.35), transparent 60%);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .logo {
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 2px;
+      font-size: 40px;
+      margin: 0;
+      color: var(--lime-strong);
+    }
+
+    .hero p {
+      margin: 4px 0 0;
+      opacity: 0.85;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .card h2, .card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1px;
+      margin: 0 0 12px;
+      color: var(--white);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input, select {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(12, 20, 6, 0.7);
+      color: var(--white);
+      font-size: 14px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: rgba(245, 247, 242, 0.5);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .row > * {
+      flex: 1 1 auto;
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      min-height: 44px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--lime), var(--lime-strong));
+      color: #111a06;
+      box-shadow: 0 8px 16px rgba(183, 221, 44, 0.3);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(183, 221, 44, 0.35);
+    }
+
+    .btn.ghost {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .list {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .list strong {
+      color: var(--lime);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        gap: 16px;
+      }
+      .hero {
+        padding: 16px;
+        gap: 12px;
+      }
+      .hero h1 {
+        font-size: 32px;
+        letter-spacing: 1.5px;
+      }
+      .hero p {
+        font-size: 13px;
+      }
+      .card {
+        padding: 16px;
+      }
+      .grid {
+        gap: 16px;
+      }
+      .row {
+        flex-direction: column;
+      }
+      input, select, .btn {
+        width: 100%;
+      }
+      .btn {
+        min-height: 48px;
+      }
+      .list {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <header class="hero">
+      <img class="logo" src="logo/logo.jpg" alt="Praça David Rosemblit Beach Tennis">
+      <div>
+        <h1>Beach Tennis</h1>
+        <p>Confirme sua presença e organize o jogo com rapidez.</p>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>Confirmar presença</h2>
+
+        <label class="field">
+          Seu nome
+          <input id="nome" placeholder="Digite seu nome" />
+        </label>
+
+        <label class="field">
+          Horário
+          <div class="row">
+            <select id="horarioSelect">
+              <option value="">Selecione um horário</option>
+            </select>
+            <button class="btn primary" onclick="confirmarSelecionado()">Confirmar horário</button>
+          </div>
+        </label>
+
+        <button class="btn ghost" onclick="estouAqui()">📍 Estou aqui agora</button>
+      </section>
+
+      <section class="card">
+        <h3>Agora</h3>
+        <div id="agora" class="list"></div>
+
+        <h3>Hoje</h3>
+        <div id="lista" class="list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script>
+    const SUPABASE_URL = 'https://xipwsuxtwbzdcoavdgwt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_lrzD08WhR5gRG3igGjngxg_o5sX8loc';
+
+    if (!SUPABASE_URL.startsWith('http')) {
+      console.error('Supabase URL inválida. Substitua SUPABASE_URL pela URL real do projeto.');
+    }
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    // 🔹 gera horários de 30 em 30 min
+    function gerarHorarios() {
+      const horarios = [];
+      for (let h = 6; h <= 22; h++) {
+        horarios.push(`${String(h).padStart(2, '0')}:00`);
+        if (h !== 22) {
+          horarios.push(`${String(h).padStart(2, '0')}:30`);
+        }
+      }
+      return horarios;
+    }
+
+    const horarios = gerarHorarios();
+
+    // 🔹 preencher select de horários
+    window.onload = () => {
+      const select = document.getElementById('horarioSelect');
+      const nomeSalvo = localStorage.getItem('nome');
+
+      if (nomeSalvo) {
+        document.getElementById('nome').value = nomeSalvo;
+      }
+
+      horarios.forEach(h => {
+        const option = document.createElement('option');
+        option.value = h;
+        option.textContent = `Vou ${h}`;
+        select.appendChild(option);
+      });
+    };
+
+    function getDeviceId() {
+      let id = localStorage.getItem('device_id');
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem('device_id', id);
+      }
+      return id;
+    }
+
+    function getNome() {
+      let nome = localStorage.getItem('nome');
+      if (!nome) {
+        nome = document.getElementById('nome').value;
+        localStorage.setItem('nome', nome);
+      }
+      return nome;
+    }
+
+    function getHoje() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    async function confirmar(horario) {
+      const nome = getNome();
+      const device_id = getDeviceId();
+
+      if (!nome) {
+        alert('Digite seu nome');
+        return;
+      }
+
+      await supabaseClient.from('presencas').upsert({
+        nome,
+        device_id,
+        horario,
+        status: 'vou',
+        data: getHoje(),
+        updated_at: new Date().toISOString()
+      });
+
+      carregarDados();
+    }
+
+    function confirmarSelecionado() {
+      const select = document.getElementById('horarioSelect');
+      const horario = select.value;
+
+      if (!horario) {
+        alert('Selecione um horário');
+        return;
+      }
+
+      confirmar(horario);
+    }
+
+    async function estouAqui() {
+      const nome = getNome();
+      const device_id = getDeviceId();
+
+      if (!nome) {
+        alert('Digite seu nome');
+        return;
+      }
+
+      await supabaseClient.from('presencas').upsert({
+        nome,
+        device_id,
+        status: 'aqui',
+        data: getHoje(),
+        updated_at: new Date().toISOString()
+      });
+
+      carregarDados();
+    }
+
+    async function carregarDados() {
+      const { data, error } = await supabaseClient
+        .from('presencas')
+        .select('*')
+        .eq('data', getHoje());
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      renderizar(data);
+    }
+
+    function renderizar(dados) {
+      const agora = dados.filter(p => p.status === 'aqui');
+
+      document.getElementById('agora').innerHTML =
+        `👥 ${agora.length} jogando agora<br/>
+         ${agora.map(p => p.nome).join(', ')}`;
+
+      let html = '';
+
+      horarios.forEach(h => {
+        const pessoas = dados.filter(p => p.horario === h);
+
+        if (pessoas.length > 0) {
+          html += `<div>
+            <strong>${h}</strong> → ${pessoas.length} pessoas<br/>
+            ${pessoas.map(p => p.nome).join(', ')}
+          </div><br/>`;
+        }
+      });
+
+      document.getElementById('lista').innerHTML = html || 'Ninguém confirmado ainda';
+    }
+
+    carregarDados();
+    setInterval(carregarDados, 10000);
+  </script>
+
+</body>
+</html>
